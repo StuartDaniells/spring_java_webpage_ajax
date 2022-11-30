@@ -1,0 +1,77 @@
+<!-- @author Stuart Daniells - c0829441
+@date 27th November
+Assignment 4
+View template - HTML page
+Contains:
+1. Google fonts for additional styling.
+2. Ajax script to auto-refresh page every 3 seconds with new visitor count-->
+
+
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Audiowide">
+		<title>Assignment 4 - Java EE</title>
+		<style>
+		body {
+		  font-family: "Audiowide", sans-serif;
+		}
+		h2{
+			display: inline-block;
+		}
+		</style>
+		<script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+	</head>
+	
+	<body style="background-color: green">
+		<h1>Welcome to Stuart's Webpage!</h1>
+		<h2 style="color: blue">The current visitor count is: </h2>
+		<!-- uses Thymeleaf to get variable values from model -->
+		<!-- <h2 style="color: white" th:text="${visitorCount}">0</h2> -->	
+		<h2 id="count" style="color: white">0</h2>
+	</body>
+	
+	<script type="text/javascript">
+		$(document).ready(function(){					 // when the DOM tree is fully constructed run JS script
+			setInterval(function(){						// uses the web API to run the setInterval
+				$.ajax({
+				    type: 'GET',
+				    url: "http://127.0.0.1:8080/currentcount",
+				    timeout: 5000,						// on timeout execute error block
+				    success: function(data) {
+				    	$("#count").html(`<h2 style="color: white">${data}</h2>`);  //replaces old html content with set parameter
+				      	console.log(data);
+				    },
+				    error: function() {
+				    	console.log("Error getting visitor count");
+				    }
+				});
+			}, 3000); 	// In every 3 seconds
+		});	
+	</script>
+	
+	<!-- Vanilla JS -->
+	<!-- <script type="text/javascript">					
+		(() => {									
+			setInterval(() => {						// uses the web API to run the setInterval
+				window.location.reload();			// reload base_url page -> welcome.html
+			}, 3000); 	// In every 3 seconds
+		})();										// using an IIFE
+	</script> -->
+	
+	
+	<!-- old errored jQuery approach -->
+	<!-- <script>
+		$(document).ready(function(){					 // when the DOM tree is fully constructed run JS script
+			setInterval(function(){						// uses the web API to run the setInterval
+				$.ajax({
+					url: "http://127.0.0.1:8080/currentcount",
+					type: "GET"
+				});
+			}, 3000); 	// In every 3 seconds
+			$("#count").html(results);
+		});	
+	</script> -->
+	
+</html>
